@@ -1,0 +1,4 @@
+encryption = "age"
+[age]
+   recipient = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLEn5WeUCh0/PKW5IvUR9EIG0eUfL6gZk47zpbM7/3z matthew@graywolfai.com"
+   identity = "~/.ssh/id_ed25519"
