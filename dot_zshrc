@@ -10,6 +10,9 @@ export ZSH="/Users/msampson/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="agnoster"
 
+if type nvim > /dev/null 2>&1; then
+  alias vim='nvim'
+fi
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -70,7 +73,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf colored-man-pages colorize pip python brew macos) 
+plugins=(git fzf colored-man-pages colorize pip python brew macos zsh-syntax-highlighting zsh-autosuggestions) 
 
 # per https://github.com/ohmyzsh/ohmyzsh/issues/6835#issuecomment-390216875
 ZSH_DISABLE_COMPFIX=true
