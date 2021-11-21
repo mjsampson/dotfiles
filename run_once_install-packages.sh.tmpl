@@ -3,6 +3,9 @@
 sudo apt install ripgrep
 {{ else if eq .chezmoi.os "darwin" -}}
 #!/bin/sh
-brew install ripgre
+brew install ripgrep
 brew install vagrant
+brew install python
+python3 -m pip install --user powerline-status
+brew install fzf
 {{ end -}}
