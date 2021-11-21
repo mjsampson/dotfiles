@@ -1,2 +1,3 @@
 autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path "%"
 call plug#begin('~/.vim/plugged')
+syntax on
