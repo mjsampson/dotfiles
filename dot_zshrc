@@ -8,7 +8,7 @@ export ZSH="/Users/msampson/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="refined"
 
 if type nvim > /dev/null 2>&1; then
   alias vim='nvim'
@@ -119,6 +119,9 @@ prompt_context() {
 #    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
   fi
 }
-neofetch
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
+
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
