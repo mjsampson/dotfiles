@@ -21,6 +21,10 @@ fi
 if type lazygit > /dev/null 2>&1; then
   alias lg='lazygit'
 fi
+
+if type python3 > /dev/null 2>&1; then
+  alias python=python3
+fi
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -125,3 +129,10 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /Users/msampson/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+echo 'eval "$(pyenv init --path)"' >> ~/.zprofile
+
+eval "$(pyenv init -)"
+eval "$(starship init zsh)"
+
+
