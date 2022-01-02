@@ -39,15 +39,33 @@
 (setq deft-directory "~/Dropbox/org/"
       deft-extensions '("org","txti")
       deft-recursive t)
-
-(after! mu4e
-  (setq sendmail-program (executable-find "msmtp")
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail))
+(map! "C-c n l" #'org-roam-buffer-toggle
+       "C-c n f" #'org-roam-node-find
+       "C-c n i"  #'org-roam-node-insert
+       "C-c n d" #'org-roam-dailies-capture-today
+       "C-c n o" #'org-id-get-create
+       "C-c n t" #'org-roam-tag-add
+       "C-c n a" #'org-roam-alias-add)
+;(org-roam-setup)
+(set-email-account!
+ "gmail"
+ '((mu4e-sent-folder       . "/[Gmail]/Sent Mail")
+   (mu4e-trash-folder      . "/[Gmail]/Bin")
+   (smtpmail-smtp-user     . "example@gmail.com"))
+ t)
+(setq mu4e-get-mail-command "mbsync gmail"
+      ;; get emails and index every 5 minutes
+      mu4e-update-interval 300
+	  ;; send emails with format=flowed
+	  mu4e-compose-format-flowed t
+	  ;; don't need to run cleanup after indexing for gmail
+	  mu4e-index-cleanup nil
+	  mu4e-index-lazy-check t
+      ;; more sensible date format
+      mu4e-headers-date-format "%d.%m.%y")
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
+(map! "C-c s" #'evil-save)
 (setq display-line-numbers-type t)
 (setq vterm-shell "/usr/local/bin/zsh")
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -156,9 +174,15 @@
     (unless (equal (file-truename today-file)
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
-
+(setq debug-on-error t)
 (after! org
   (add-to-list 'org-after-todo-state-change-hook
              (lambda ()
                (when (equal org-state "DONE")
                  (my/org-roam-copy-todo-to-today)))))
+;(use-package org-download
+;  :after org
+;  :bind
+;  (:map org-mode-map
+;        (("s-Y" . org-download-screenshot)
+ ;        ("s-y" . org-download-yank))))
