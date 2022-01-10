@@ -1,3 +1,8 @@
+# Matthew Sampsons Doom config
+
+This is my new literate config :) Follow me on twitter lol
+
+#+BEGIN_SRC elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -271,3 +276,8 @@ state is DONE."
       '(("c" "Simple agenda view"
          ((alltodo "")
           (org-agenda-filter-by-tag "@work")))))
+
+#+END_SRC
+
+#+RESULTS:
+| c | Simple agenda view | ((alltodo ) (org-agenda-filter-by-tag @work)) |

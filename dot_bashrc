@@ -1,4 +1,5 @@
-# Run twolfson/sexy-bash-prompt
-. ~/.bash_prompt
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+export PATH=~/.emacs.d/bin:$PATH

@@ -7,6 +7,7 @@
 ;; clients, file templates and snippets.
 (setq user-full-name "Matthew Sampson"
       user-mail-address "matthew@graywolfai.com")
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;

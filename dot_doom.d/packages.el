@@ -50,3 +50,8 @@
 ;(unpin! t)
 (package! powerline)
 (unpin! org-roam)
+;;(package! org-super-agenda)
+;; doesn't work : / (package! literate-calc-mode)
+;; doesn't work : / (package! org-sort-tasks
+;; :recipe (:host github :repo "felipelalli/org-sort-tasks"))
+(package! org-noter)
