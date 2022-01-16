@@ -300,4 +300,20 @@ state is DONE."
 ;;(setq org_notes "~/Dropbox/org/notes/")
 ;;(setq zot_bib)
 ;;(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
-(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+(use-package citar
+  :custom
+  (org-cite-global-blbliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-bibliography org-cite-global-bibliography)
+  :bind
+  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+
+(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display
+
+;;(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+
+(use-package! org-roam-bibtex
+  :after org-roam)
+(setq orb-roam-ref-format "org-cite") ;; sets citation key format style to org-cite @element format
