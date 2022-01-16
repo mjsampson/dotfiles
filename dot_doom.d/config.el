@@ -54,8 +54,9 @@ state is DONE."
   (my/org-remove-tag "next"))
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
+
 (after! org
-  (setq org-todo-keywords '((sequence "WAITING" "TODO" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
+  (setq org-todo-keywords '((sequence "WAITING" "TODO(@)" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
   (setq org-todo-keyword-faces
       '(("TODO" . org-warning)
         ("NEXT" . "red")
@@ -94,7 +95,7 @@ state is DONE."
   (switch-to-buffer (find-file-noselect org-default-notes-file)))
 (defun my/goto-private-config ()
      (interactive)
-     (switch-to-buffer (find-file-noselect "~/.doom.d/config.el")))
+     (switch-to-buffer (find-file-noselect "~/.doom.d/config.org")))
 (global-set-key (kbd "C-c i") #'my/goto-org-index)
 (global-set-key (kbd "C-c u") #'my/goto-org-notes)
 (global-set-key (kbd "C-c n p") #'my/goto-private-config)
@@ -267,7 +268,36 @@ state is DONE."
 (setq message-kill-buffer-on-exit t)
 ;;(use-package! org-sort-tasks)
 (call-process-shell-command "dura serve &" nil 0)
+
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+
+;;(defun my/refile-meeting-todo )
+
+(use-package org-noter
+:after org
+  :ensure t)
+
+(defun my-skip-unless-waiting ()
+  "Skip trees that are not waiting"
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (re-search-forward ":waiting:" subtree-end t)
+        nil          ; tag found, do not skip
+      subtree-end))) ; tag not found, continue after end of subtree
 (setq org-agenda-custom-commands
       '(("c" "Simple agenda view"
-         ((alltodo "")
-          (org-agenda-filter-by-tag "@work")))))
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+
+          (agenda "")
+          (alltodo "")))))
+
+(setq parinfer-rust-check-before-enable nil) ;; stops the annoying parinfer "do you want to fix indentation y or n" prompt
+(use-package yequake
+  :custom
+    (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
+
+;;(setq org_notes "~/Dropbox/org/notes/")
+;;(setq zot_bib)
+;;(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
+(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))

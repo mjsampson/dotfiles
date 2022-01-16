@@ -2,7 +2,7 @@
 
 This is my new literate config :) Follow me on twitter lol
 
-#+BEGIN_SRC elisp
+#+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -59,8 +59,12 @@ state is DONE."
   (my/org-remove-tag "next"))
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
+#+end_src
+
+Conifugring tracking todo state changes following https://orgmode.org/org.html#Tracking-TODO-state-changes
+#+begin_src elisp
 (after! org
-  (setq org-todo-keywords '((sequence "WAITING" "TODO" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
+  (setq org-todo-keywords '((sequence "WAITING" "TODO(@)" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
   (setq org-todo-keyword-faces
       '(("TODO" . org-warning)
         ("NEXT" . "red")
@@ -99,7 +103,7 @@ state is DONE."
   (switch-to-buffer (find-file-noselect org-default-notes-file)))
 (defun my/goto-private-config ()
      (interactive)
-     (switch-to-buffer (find-file-noselect "~/.doom.d/config.el")))
+     (switch-to-buffer (find-file-noselect "~/.doom.d/config.org")))
 (global-set-key (kbd "C-c i") #'my/goto-org-index)
 (global-set-key (kbd "C-c u") #'my/goto-org-notes)
 (global-set-key (kbd "C-c n p") #'my/goto-private-config)
@@ -272,12 +276,68 @@ state is DONE."
 (setq message-kill-buffer-on-exit t)
 ;;(use-package! org-sort-tasks)
 (call-process-shell-command "dura serve &" nil 0)
-(setq org-agenda-custom-commands
-      '(("c" "Simple agenda view"
-         ((alltodo "")
-          (org-agenda-filter-by-tag "@work")))))
-
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 | c | Simple agenda view | ((alltodo ) (org-agenda-filter-by-tag @work)) |
+
+Following [[https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html][Aaron Beiber Organizing Notes With Refile]]. This config
+
+- Enables headings / parents to be created on the fly
+
+#+begin_src elisp
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+#+end_src
+
+Working on a refile function for meetings that links the todo back to the meeting and vise versa... I don't have a lot of time for this but I know it'll use the refile command + org-mode linking
+#+begin_src elisp
+;;(defun my/refile-meeting-todo )
+#+end_src
+
+Setting up org noter
+
+#+begin_src elisp
+(use-package org-noter
+:after org
+  :ensure t)
+#+end_src
+
+
+following https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+#+begin_src elisp
+
+(defun my-skip-unless-waiting ()
+  "Skip trees that are not waiting"
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (re-search-forward ":waiting:" subtree-end t)
+        nil          ; tag found, do not skip
+      subtree-end))) ; tag not found, continue after end of subtree
+(setq org-agenda-custom-commands
+      '(("c" "Simple agenda view"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+
+          (agenda "")
+          (alltodo "")))))
+
+#+end_src
+
+#+begin_src elisp
+(setq parinfer-rust-check-before-enable nil) ;; stops the annoying parinfer "do you want to fix indentation y or n" prompt
+(use-package yequake
+  :custom
+    (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
+
+
+#+end_src
+
+* Note taking workflow
+Following https://rgoswami.me/posts/org-note-workflow/
+
+#+begin_src elisp
+;;(setq org_notes "~/Dropbox/org/notes/")
+;;(setq zot_bib)
+;;(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
+(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+#+end_src

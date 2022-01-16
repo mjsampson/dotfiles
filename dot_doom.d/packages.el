@@ -54,4 +54,6 @@
 ;; doesn't work : / (package! literate-calc-mode)
 ;; doesn't work : / (package! org-sort-tasks
 ;; :recipe (:host github :repo "felipelalli/org-sort-tasks"))
-(package! org-noter)
+;;(package! org-noter) ;; I don't think I need this, because I can activate it in init.el https://github.com/hlissner/doom-emacs/blob/master/modules/lang/org/README.org
+(package! yequake)
+(package! org-ref)
