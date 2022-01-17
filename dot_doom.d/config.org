@@ -339,13 +339,23 @@ Following https://rgoswami.me/posts/org-note-workflow/
 ;;(setq org_notes "~/Dropbox/org/notes/")
 ;;(setq zot_bib)
 ;;(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
-(use-package citar
+(after! citar
+(setq org-cite-global-bibliography
+        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+(setq org-cite-insert-processor 'citar)
+(setq org-cite-follow-processor 'citar)
+(setq org-cite-activate-processor 'citar)
+(setq citar-bibliography org-cite-global-bibliography)
+(setq citar-notes-paths `("~/Dropbox/Org/roam"))
+)
+(use-package! citar
+  :defer t
   :custom
-  (org-cite-global-blbliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  (citar-bibliography org-cite-global-bibliography)
+(setq citar-symbols
+        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+  (setq citar-symbol-separator "  ")
   :bind
   (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
 
