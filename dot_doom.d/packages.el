@@ -56,6 +56,7 @@
 ;; :recipe (:host github :repo "felipelalli/org-sort-tasks"))
 ;;(package! org-noter) ;; I don't think I need this, because I can activate it in init.el https://github.com/hlissner/doom-emacs/blob/master/modules/lang/org/README.org
 (package! yequake)
-(package! org-ref)
-(package! org-roam-bibtex
-  :recipe (:host github :repo "org-roam/org-roam-bibtex")) ;; from https://github.com/org-roam/org-roam-bibtex doom section
+;;(package! org-ref)
+;;(package! org-roam-bibtex
+;;  :recipe (:host github :repo "org-roam/org-roam-bibtex")) ;; from https://github.com/org-roam/org-roam-bibtex doom section
+;;(unpin! citar)

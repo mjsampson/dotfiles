@@ -42,28 +42,16 @@ This is my new literate config :) Follow me on twitter lol
                 (lambda () (interactive) (find-file org-index-file)))
 (global-set-key (kbd "C-x c") #'copy-region-as-kill)
 (global-set-key (kbd "C-x v") #'org-yank)
-(after! org
-  (setq org-default-notes-file (concat org-directory "inbox.org"))
-  (setq org-roam-directory "~/Dropbox/org/roam")
-  )
+(setq org-default-notes-file (concat org-directory "inbox.org"))
+(setq org-roam-directory "~/Dropbox/org/roam")
 (setq org-agenda-files (list org-index-file))
 ;; from here https://stackoverflow.com/a/18209748/16154075
-(defun my/org-remove-tag (tag)
-    "Removes `TAG' from current list of tags if present when todo
-state is DONE."
-  (when (org-entry-is-done-p)
-    (org-toggle-tag tag 'off)))
-
-(defun my/remove-next ()
-   "Removes `event' from list of tags when state is set to done."
-  (my/org-remove-tag "next"))
-(global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
 #+end_src
 
 Conifugring tracking todo state changes following https://orgmode.org/org.html#Tracking-TODO-state-changes
 #+begin_src elisp
-(after! org
+;;(after! org
   (setq org-todo-keywords '((sequence "WAITING" "TODO(@)" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
   (setq org-todo-keyword-faces
       '(("TODO" . org-warning)
@@ -73,20 +61,25 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
         ("CANCELLED" . "orange")
         ("FIGURING-IT-OUT" . "red")
         ("MAKING-IT-HAPPEN" . "red")))
-  )
-(add-hook 'org-after-todo-state-change-hook #'my/remove-next)
+;;  )
+;;(after! org-capture
+;;  (setq org-default-notes-file (concat org-directory "inbox.org"))
+;;  (setq org-capture-templates
+;;    '(("t" "Todo" entry (file org-default-notes-file)
+;;       "* TODO %?\n%U" :empty-lines 1)
+;;         )))
 
 (defun my/log-todo-next-creation-date (&rest ignore)
   "Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
   (when (and (string= (org-get-todo-state) "NEXT")
              (not (org-entry-get nil "ACTIVATED")))
     (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
-(add-hook 'org-after-todo-state-change-hook #'my/log-todo-next-creation-date)
+;;(add-hook 'org-after-todo-state-change-hook #'my/log-todo-next-creation-date)
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq deft-directory org-directory
-      deft-extensions '("org","txti")
+      deft-extensions '("org")
       deft-recursive t)
 (map! "C-c n l" #'org-roam-buffer-toggle
        "C-c n f" #'org-roam-node-find
@@ -95,84 +88,49 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
        "C-c n o" #'org-id-get-create
        "C-c n t" #'org-roam-tag-add
        "C-c n a" #'org-roam-alias-add)
-(defun my/goto-org-index ()
-    (interactive)
-    (switch-to-buffer (find-file-noselect org-index-file)))
-(defun my/goto-org-notes ()
-  (interactive)
-  (switch-to-buffer (find-file-noselect org-default-notes-file)))
-(defun my/goto-private-config ()
-     (interactive)
-     (switch-to-buffer (find-file-noselect "~/.doom.d/config.org")))
-(global-set-key (kbd "C-c i") #'my/goto-org-index)
-(global-set-key (kbd "C-c u") #'my/goto-org-notes)
-(global-set-key (kbd "C-c n p") #'my/goto-private-config)
-(set-email-account!
- "gmail"
- '((mu4e-sent-folder       . "/[Gmail]/Sent Mail")
-   (mu4e-trash-folder      . "/[Gmail]/Bin")
-   (smtpmail-smtp-user     . "example@gmail.com"))
- t)
-(setq org-refile-targets '((org-index-file :maxlevel . 3)))
-(after! mu4e (setq mu4e-get-mail-command "mbsync gmail"
+(setq x-selection-timeout 10)
+#+end_src
+* Gmail
+#+begin_src elisp
+;;(set-email-account!
+;; "gmail"
+;; '((mu4e-sent-folder       . "/[Gmail]/Sent Mail")
+;;   (mu4e-trash-folder      . "/[Gmail]/Bin")
+;;   (smtpmail-smtp-user     . "example@gmail.com"))
+;; t)
+;;(setq org-refile-targets '((org-index-file :maxlevel . 3)))
+;;(after! mu4e (setq mu4e-get-mail-command "mbsync gmail"
       ;; get emails and index every 5 minutes
-      mu4e-update-interval 300
+;;      mu4e-update-interval 300
 	  ;; send emails with format=flowed
-	  mu4e-compose-format-flowed t
+;;	  mu4e-compose-format-flowed t
 	  ;; don't need to run cleanup after indexing for gmail
-	  mu4e-index-cleanup nil
-	  mu4e-index-lazy-check t
+;;	  mu4e-index-cleanup nil
+;;	  mu4e-index-lazy-check t
       ;; more sensible date format
-      mu4e-headers-date-format "%d.%m.%y"))
+;;      mu4e-headers-date-format "%d.%m.%y"))
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
+;;(setq message-send-mail-function 'smtpmail-send-it
+;;     smtpmail-stream-type 'starttls
+;;     smtpmail-default-smtp-server "smtp.gmail.com"
+;;     smtpmail-smtp-server "smtp.gmail.com"
+;;     smtpmail-smtp-service 587)
+;;(setq auth-sources (quote (macos-keychain-internet macos-keychain-generic)))
+
+#+end_src
+
+* Setting up terminal
+#+begin_src elisp
 (map! "C-c s" #'evil-save)
-(setq display-line-numbers-type t)
+;;(setq display-line-numbers-type t) ;; <2022-01-17 Mon 17:06> uncommenting while debugging org capture freezing
 (setq vterm-shell "/usr/local/bin/zsh")
-;; Here are some additional functions/macros that could help you configure Doom:
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
-;; Overview
-;; --------
-;; Inserts an image from the clipboard by prompting the user for a filename.
-;; Default extension for the pasted filename is .png
 
-;; A ./images directory will be created relative to the current Org-mode document to store the images.
+#+end_src
+* Org-Mode
 
-;; The default name format of the pasted image is:
-;; filename: <yyyymmdd>_<hhmmss>_-_<image-filename>.png
-
-;; Important
-;; --------
-;; This function depends on 'pngpaste' to paste the clipboard image
-;; -> $ brew install pngpaste
-
-;; Basic Customization
-;; -------------------
-;; Include the current Org-mode header as part of the image name.
-;; (setq my/insert-clipboard-image-use-headername t)
-;; filename: <yyyymmdd>_<hhmmss>_-_<headername>_-_<image-filename>.png
-
-;; Include the buffername as part of the image name.
-;; (setq my/insert-clipboard-image-use-buffername t)
-;; filename: <yyyymmdd>_<hhmmss>_-_<buffername>_-_<image-filename>.png
-;; Org-download-clipboard was not working for in in org-roamv2 (not sure if it'd work in org-roamv1 either..never tested), the below functions does work however, and I like it better because I can provide a customer name to each file pasted from clipboard
-;; Full name format
-;; filename: <yyyymmdd>_<hhmmss>_-_<buffername>_-_<headername>_-_<image-filename>.png
-(defun my/insert-clipboard-image (filename)
+#+begin_src elisp
+(defun my/insert-clipboard-image (filename) ;; I had to add this to paste images in org-roam. I found it online on stackoverflow
   "Inserts an image from the clipboard"
   (interactive "sFilename to paste: ")
   (let ((file
@@ -200,9 +158,6 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
 (map! :desc "Insert clipboard image"
       :n "C-M-y" #'my/insert-clipboard-image)
 
-(after! org
-  (setq org-image-actual-width 300))
-;; auto turns on org-displayin-inline-images
 (add-hook 'org-mode-hook #'org-display-inline-images)
 ;; enable autosave
 (setq auto-save-default t
@@ -216,9 +171,15 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
   (org-insert-time-stamp (current-time) t)
   )
 (global-set-key (kbd "C-.") #'my/insert-timestamp)
-(setq org-roam-dailies-capture-templates
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
       '(("d" "default" entry "* %<%I:%M %p>: %?"
          :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+)
+#+end_src
+
+** Org-roam dailies copy done tasks to today (this code needs to be debugged)
+#+begin_src elisp
 (defun my/org-roam-copy-todo-to-today ()
   (interactive)
   (let ((org-refile-keep t) ;; Set this to nil to delete the original!
@@ -237,49 +198,37 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
     (unless (equal (file-truename today-file)
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
-(setq debug-on-error t)
-(after! org
-  (add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (my/org-roam-copy-todo-to-today)))))
-;(use-package org-download
-;  :after org
-;  :bind
-;  (:map org-mode-map
-;        (("s-Y" . org-download-screenshot)
- ;        ("s-y" . org-download-yank))))
-;; Define the custum capture templates
-(after! org-capture
-  (setq org-capture-templates
-       '(("t" "todo" entry (file org-default-notes-file)
-	  "* TODO %?\n:LOGBOOK:\n:CREATED_AT: %T\n:END:\n")
-         ("w" "waiting" entry (file org-default-notes-file)
-          "* WAITING %? %^G\n:LOGBOOK:\n:CREATED_AT: %T\n ")
-	 ("m" "Meeting" entry (file org-default-notes-file)
-	  "* %T %^{meeting title} :MEETING:\n:LOGBOOK:\n:%^{ATTENDANCE}p\n:END:" :clock-in t :clock-resume t)
-	 ("d" "Diary" entry (file+datetree "~/org/diary.org")
-	  "* %?\n%U\n")
-	 ("i" "Idea" entry (file org-default-notes-file)
-	  "* %? :IDEA: \n:LOGBOOK:\n:CREATED_AT: %T\n:END:")
-	 ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
-	  "** NEXT %? \nDEADLINE: %t") )))
-(setq org-log-done 'note)
-(setq message-send-mail-function 'smtpmail-send-it
-     smtpmail-stream-type 'starttls
-     smtpmail-default-smtp-server "smtp.gmail.com"
-     smtpmail-smtp-server "smtp.gmail.com"
-     smtpmail-smtp-service 587)
-(setq auth-sources (quote (macos-keychain-internet macos-keychain-generic)))
-
-;; don't keep message buffers around
-(setq message-kill-buffer-on-exit t)
-;;(use-package! org-sort-tasks)
-(call-process-shell-command "dura serve &" nil 0)
+;;(after! org
+;;  (add-to-list 'org-after-todo-state-change-hook
+;;             (lambda ()
+;;               (when (equal org-state "DONE")
+;;                 (my/org-roam-copy-todo-to-today)))))
 #+end_src
 
-#+RESULTS:
-| c | Simple agenda view | ((alltodo ) (org-agenda-filter-by-tag @work)) |
+** Org-Capture templates
+#+begin_src elisp
+(after! org-capture
+      (setq org-default-notes-file (concat org-directory "inbox.org"))
+      (setq org-capture-templates
+       '(("t" "Personal todo" entry (file+headline org-default-notes-file "Inbox") "* TODO %?\n:LOGBOOK:\n:CREATED_AT: %T\n:END:\n")))
+)
+;;         ("w" "waiting" entry (file org-default-notes-file)
+;;          "* WAITING %? %^G\n:LOGBOOK:\n:CREATED_AT: %T\n ")
+;;	 ("m" "Meeting" entry (file org-default-notes-file)
+;;	  "* %T %^{meeting title} :MEETING:\n:LOGBOOK:\n:%^{ATTENDANCE}p\n:END:" :clock-in t :clock-resume t)
+;;	 ("d" "Diary" entry (file+datetree "~/org/diary.org")
+;;	  "* %?\n%U\n")
+;;	 ("i" "Idea" entry (file org-default-notes-file)
+;;	  "* %? :IDEA: \n:LOGBOOK:\n:CREATED_AT: %T\n:END:")
+;;	  "** NEXT %? \nDEADLINE: %t") )))
+
+(setq org-log-done 'note)
+
+;; don't keep message buffers around
+;;(setq message-kill-buffer-on-exit t)
+;;(use-package! org-sort-tasks)
+;;(call-process-shell-command "dura serve &" nil 0)
+#+end_src
 
 Following [[https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html][Aaron Beiber Organizing Notes With Refile]]. This config
 
@@ -297,37 +246,37 @@ Working on a refile function for meetings that links the todo back to the meetin
 Setting up org noter
 
 #+begin_src elisp
-(use-package org-noter
-:after org
-  :ensure t)
+;;(use-package org-noter
+;;:after org
+;;  :ensure t)
 #+end_src
 
 
 following https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
 #+begin_src elisp
 
-(defun my-skip-unless-waiting ()
-  "Skip trees that are not waiting"
-  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (if (re-search-forward ":waiting:" subtree-end t)
-        nil          ; tag found, do not skip
-      subtree-end))) ; tag not found, continue after end of subtree
-(setq org-agenda-custom-commands
-      '(("c" "Simple agenda view"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
-
-          (agenda "")
-          (alltodo "")))))
+;;(defun my-skip-unless-waiting ()
+;;  "Skip trees that are not waiting"
+;;  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+;;    (if (re-search-forward ":waiting:" subtree-end t)
+;;        nil          ; tag found, do not skip
+;;      subtree-end))) ; tag not found, continue after end of subtree
+;;(setq org-agenda-custom-commands
+;;      '(("c" "Simple agenda view"
+;;         ((tags "PRIORITY=\"A\""
+;;                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+;;                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+;;
+;;          (agenda "")
+;;          (alltodo "")))))
 
 #+end_src
 
 #+begin_src elisp
-(setq parinfer-rust-check-before-enable nil) ;; stops the annoying parinfer "do you want to fix indentation y or n" prompt
-(use-package yequake
-  :custom
-    (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
+;;(setq parinfer-rust-check-before-enable nil) ;; stops the annoying parinfer "do you want to fix indentation y or n" prompt
+;;(use-package yequake
+;;  :custom
+;;    (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
 
 
 #+end_src
@@ -339,39 +288,64 @@ Following https://rgoswami.me/posts/org-note-workflow/
 ;;(setq org_notes "~/Dropbox/org/notes/")
 ;;(setq zot_bib)
 ;;(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
-(after! citar
-(setq org-cite-global-bibliography
-        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
-(setq org-cite-insert-processor 'citar)
-(setq org-cite-follow-processor 'citar)
-(setq org-cite-activate-processor 'citar)
-(setq citar-bibliography org-cite-global-bibliography)
-(setq citar-notes-paths `("~/Dropbox/Org/roam"))
-)
-(use-package! citar
-  :defer t
-  :custom
-(setq citar-symbols
-        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
-          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
-          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
-  (setq citar-symbol-separator "  ")
-  :bind
-  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
-
-(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display
+;;(after! citar
+;;(setq org-cite-global-bibliography
+;;        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+;;(setq org-cite-insert-processor 'citar)
+;;(setq org-cite-follow-processor 'citar)
+;;(setq org-cite-activate-processor 'citar)
+;;(setq citar-bibliography org-cite-global-bibliography)
+;;(setq citar-notes-paths `("~/Dropbox/Org/roam"))
+;;)
+;;(use-package! citar
+;;  :defer t)
+;; commenting out because this seemed to cause an issue when I opened org-capture and it froze emacs (I saw a note about LaaTex-mode hook in the error)
+;;(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display
 
 ;;(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
 #+end_src
 
 #+RESULTS:
-| ~/Dropbox/org/zotLib.bib | ~/Dropbox/org/gw-zotLib.bib |
+ ~/Dropbox/org/zotLib.bib  ~/Dropbox/org/gw-zotLib.bib 
 
 * Org-roam-bibtex
 following guide from https://github.com/org-roam/org-roam-bibtex#doom-emacs
 note I can't seem to get orb to know where my .bib files are or to work with citar (I'm assuming that's what it uses to search and act on my citations). I don't super care right now though because citar can work with org-roam-v2 apparently
 #+begin_src elisp
-(use-package! org-roam-bibtex
-  :after org-roam)
-(setq orb-roam-ref-format "org-cite") ;; sets citation key format style to org-cite @element format
+;;(use-package! org-roam-bibtex
+;;  :after org-roam)
+;;(setq orb-roam-ref-format "org-cite") ;; sets citation key format style to org-cite @element format
+#+end_src
+
+
+* Following https://www.higithub.com/minad/repo/citar and searching for "citar-file-note-rog-include" I can see the config
+
+
+
+* Citar Config
+#+begin_src elisp
+;;(after! citar
+;;(setq citar-file-note-org-include 'org-roam-ref))
+#+end_src
+
+
+Following https://github.com/bdarcus/citar/wiki/Notes-configuration#org
+
+#+begin_src emacs-lisp 
+;;(defun my/citar-org-open-notes (key entry)
+;;  (let* ((bib (string-join (list my/bibtex-directory key ".bib")))
+;;         (org (string-join (list my/bibtex-directory key ".org")))
+;;         (new (not (file-exists-p org))))
+;;    (funcall citar-file-open-function org)
+;;    (when (and new (eq (buffer-size) 0))assoc-default "title" entry)
+;;                      user-full-name
+;;                      user-mail-address
+;;                      bib
+;;                      (with-temp-buffer
+;;                        (insert-file-contents bib)
+;;                        (buffer-string))))
+;;      (search-backward "|")
+;;      (delete-char 1)
+
+;;(setq-default citar-open-note-function 'my/citar-org-open-notes)
 #+end_src
