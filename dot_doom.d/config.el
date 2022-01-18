@@ -177,26 +177,19 @@
     (unless (equal (file-truename today-file)
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
-;;(after! org
-;;  (add-to-list 'org-after-todo-state-change-hook
-;;             (lambda ()
-;;               (when (equal org-state "DONE")
-;;                 (my/org-roam-copy-todo-to-today)))))
+(after! org
+  (add-to-list 'org-after-todo-state-change-hook
+             (lambda ()
+               (when (equal org-state "DONE")
+                 (my/org-roam-copy-todo-to-today)))))
 
-(after! org-capture
+(after! (org org-capture)
       (setq org-default-notes-file (concat org-directory "inbox.org"))
       (setq org-capture-templates
-       '(("t" "Personal todo" entry (file+headline org-default-notes-file "Inbox") "* TODO %?\n:LOGBOOK:\n:CREATED_AT: %T\n:END:\n" :prepend t)))
+       '(("t" "Personal todo" entry (file+headline org-default-notes-file "Inbox") "* TODO %?\n:LOGBOOK:\n:CREATED_AT: %T\n:END:\n" :prepend t)
+         ("m" "Meeting" entry (file+headline org-default-notes-file "Meetings") "* %T %^{meeting title} :MEETING:\n %?" :clock-in t :clock-resume t)
+         ("i" "Idea" entry (file+headline org-default-notes-file "Ideas") "* %? :IDEA: \n:LOGBOOK:\n:CREATED_AT: %T\n:END:")))
 )
-;;         ("w" "waiting" entry (file org-default-notes-file)
-;;          "* WAITING %? %^G\n:LOGBOOK:\n:CREATED_AT: %T\n ")
-;;	 ("m" "Meeting" entry (file org-default-notes-file)
-;;	  "* %T %^{meeting title} :MEETING:\n:LOGBOOK:\n:%^{ATTENDANCE}p\n:END:" :clock-in t :clock-resume t)
-;;	 ("d" "Diary" entry (file+datetree "~/org/diary.org")
-;;	  "* %?\n%U\n")
-;;	 ("i" "Idea" entry (file org-default-notes-file)
-;;	  "* %? :IDEA: \n:LOGBOOK:\n:CREATED_AT: %T\n:END:")
-;;	  "** NEXT %? \nDEADLINE: %t") )))
 
 (setq org-log-done 'note)
 
@@ -229,26 +222,23 @@
 ;;          (alltodo "")))))
 
 ;;(setq parinfer-rust-check-before-enable nil) ;; stops the annoying parinfer "do you want to fix indentation y or n" prompt
-;;(use-package yequake
-;;  :custom
-;;    (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
+(use-package yequake
+  :custom
+    (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
 
-;;(setq org_notes "~/Dropbox/org/notes/")
-;;(setq zot_bib)
-;;(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
-;;(after! citar
-;;(setq org-cite-global-bibliography
-;;        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
-;;(setq org-cite-insert-processor 'citar)
-;;(setq org-cite-follow-processor 'citar)
-;;(setq org-cite-activate-processor 'citar)
-;;(setq citar-bibliography org-cite-global-bibliography)
-;;(setq citar-notes-paths `("~/Dropbox/Org/roam"))
-;;)
-;;(use-package! citar
-;;  :defer t)
-;; commenting out because this seemed to cause an issue when I opened org-capture and it froze emacs (I saw a note about LaaTex-mode hook in the error)
-;;(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display
+(setq org_notes "~/Dropbox/org/notes/")
+;;(setq zot_bib) ;; not sure if I need this, I think its just a private variables
+(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
+(after! citar
+  (setq org-cite-global-bibliography
+        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+(setq org-cite-insert-processor 'citar)
+(setq org-cite-follow-processor 'citar)
+(setq org-cite-activate-processor 'citar)
+(setq citar-bibliography org-cite-global-bibliography)
+(setq citar-notes-paths `("~/Dropbox/Org/roam"))
+)
+(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display
 
 ;;(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
 
@@ -275,3 +265,46 @@
 ;;      (delete-char 1)
 
 ;;(setq-default citar-open-note-function 'my/citar-org-open-notes)
+(defun my-citar-org-open-notes (key entry)
+  (let* ((bib (string-join (list my/bibtex-directory key ".bib")))
+         (org (string-join (list my/bibtex-directory key ".org")))
+         (new (not (file-exists-p org))))
+    (funcall citar-file-open-function org)
+    (when (and new (eq (buffer-size) 0))
+      (insert (format template
+                      (assoc-default "title" entry)
+                      user-full-name
+                      user-mail-address
+                      bib
+                      (with-temp-buffer
+                        (insert-file-contents bib)
+                        (buffer-string))))
+      (search-backward "|")
+      (delete-char 1))))
+
+;;(setq-default citar-open-note-function 'my-citar-org-open-notes)
+(defun my-citar-org-format-note-function (key entry filepath)
+  "Format a note FILEPATH from KEY and ENTRY."
+    (let* ((template (citar-get-template 'note))
+           (note-meta
+            (when template
+              (citar--format-entry-no-widths
+               entry
+               template)))
+           (buffer (find-file filepath)))
+      (with-current-buffer buffer
+        ;; This just overrides other template insertion.
+        (erase-buffer)
+        (citar-org-roam-make-preamble key)
+        (insert ":PROPERTIES:\n:ID:     @")
+        (insert key)
+        (insert"\n:END:")
+        (insert "#+title: ")
+        (when template (insert note-meta))
+        (insert "#+this-is-a-test: ")
+        (insert "\n\n|\n\n#+print_bibliography boobies :")
+        (search-backward "|")
+        (delete-char 1)
+        (when (fboundp 'evil-insert)
+          (evil-insert 1)))))
+(setq citar-format-note-function #'my-citar-org-format-note-function)
