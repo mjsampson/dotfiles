@@ -90,7 +90,7 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
        "C-c n a" #'org-roam-alias-add)
 (setq x-selection-timeout 10)
 #+end_src
-* Gmail
+* Gmail (commented out for now since I don't have time to setup my workflow)
 #+begin_src elisp
 ;;(set-email-account!
 ;; "gmail"
@@ -217,10 +217,6 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
 
 (setq org-log-done 'note)
 
-;; don't keep message buffers around
-;;(setq message-kill-buffer-on-exit t)
-;;(use-package! org-sort-tasks)
-;;(call-process-shell-command "dura serve &" nil 0)
 #+end_src
 
 Following [[https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html][Aaron Beiber Organizing Notes With Refile]]. This config
@@ -236,16 +232,8 @@ Working on a refile function for meetings that links the todo back to the meetin
 ;;(defun my/refile-meeting-todo )
 #+end_src
 
-Setting up org noter
 
-#+begin_src elisp
-;;(use-package org-noter
-;;:after org
-;;  :ensure t)
-#+end_src
-
-
-following https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+Following [cite:@bieberAgendaLifeOrg2016] to setup my agenda workflow, right now it's pretty messy
 #+begin_src elisp
 
 ;;(defun my-skip-unless-waiting ()
@@ -298,64 +286,11 @@ Following https://rgoswami.me/posts/org-note-workflow/
 #+RESULTS:
  ~/Dropbox/org/zotLib.bib  ~/Dropbox/org/gw-zotLib.bib 
 
-* Org-roam-bibtex
-following guide from https://github.com/org-roam/org-roam-bibtex#doom-emacs
-note I can't seem to get orb to know where my .bib files are or to work with citar (I'm assuming that's what it uses to search and act on my citations). I don't super care right now though because citar can work with org-roam-v2 apparently
-#+begin_src elisp
-;;(use-package! org-roam-bibtex
-;;  :after org-roam)
-;;(setq orb-roam-ref-format "org-cite") ;; sets citation key format style to org-cite @element format
-#+end_src
 
-
-* Following https://www.higithub.com/minad/repo/citar and searching for "citar-file-note-rog-include" I can see the config
-
-
-
-* Citar Config
-#+begin_src elisp
-;;(after! citar
-;;(setq citar-file-note-org-include 'org-roam-ref))
-#+end_src
-
-
-Following https://github.com/bdarcus/citar/wiki/Notes-configuration#org
+* Citar + Org-Roam
+Following  [[https://github.com/bdarcus/citar/blob/37493749bcad63613f01ecad63b2f5628f6f13f8/citar-org.el#L279][citar format note function]] from the citar repo as a guide. I had to edit the format note function to include the ID property for org-roam. A similar thing could be achieved with `org-ref` + `org-ref-bibtex (ORB)` but I wanted to use the newer org-cite with vertico, so I went with citar instead that had its own note templating function that worked with org-roamv2. I've read a bit about how org-roamv2 supports the org-cite format and I'm interpreting from citar's readme (as of <2022-01-18 Tue 07:41>) that the default note formatting function should just work with org-roam v2 through the connection of org-cite, but I wasn't able to see it working without editing it like below. I also don't know if the citation key is the best thing for the org-id. I mainly ue Zotero for bibtex management so Zotero would generate the citations keys from what I understand, assuming they're unique it should be fine. A better solution would probably include hash the citation-key + timestamp, since it's more about uniqueness than determinism I believe
 
 #+begin_src emacs-lisp 
-;;(defun my/citar-org-open-notes (key entry)
-;;  (let* ((bib (string-join (list my/bibtex-directory key ".bib")))
-;;         (org (string-join (list my/bibtex-directory key ".org")))
-;;         (new (not (file-exists-p org))))
-;;    (funcall citar-file-open-function org)
-;;    (when (and new (eq (buffer-size) 0))assoc-default "title" entry)
-;;                      user-full-name
-;;                      user-mail-address
-;;                      bib
-;;                      (with-temp-buffer
-;;                        (insert-file-contents bib)
-;;                        (buffer-string))))
-;;      (search-backward "|")
-;;      (delete-char 1)
-
-;;(setq-default citar-open-note-function 'my/citar-org-open-notes)
-(defun my-citar-org-open-notes (key entry)
-  (let* ((bib (string-join (list my/bibtex-directory key ".bib")))
-         (org (string-join (list my/bibtex-directory key ".org")))
-         (new (not (file-exists-p org))))
-    (funcall citar-file-open-function org)
-    (when (and new (eq (buffer-size) 0))
-      (insert (format template
-                      (assoc-default "title" entry)
-                      user-full-name
-                      user-mail-address
-                      bib
-                      (with-temp-buffer
-                        (insert-file-contents bib)
-                        (buffer-string))))
-      (search-backward "|")
-      (delete-char 1))))
-
-;;(setq-default citar-open-note-function 'my-citar-org-open-notes)
 (defun my-citar-org-format-note-function (key entry filepath)
   "Format a note FILEPATH from KEY and ENTRY."
     (let* ((template (citar-get-template 'note))
