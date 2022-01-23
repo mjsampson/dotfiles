@@ -29,7 +29,7 @@
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 
 ;;; :tools magit
-(setq magit-repository-directories '(("~/projects" . 2))
+(setq magit-repository-directories '(("~/Projects" . 2))
       magit-save-repository-buffers nil
       ;; Don't restore the wconf after quitting magit, it's jarring
       magit-inhibit-save-previous-winconf t
@@ -50,6 +50,8 @@
 
 ;; from here https://stackoverflow.com/a/18209748/16154075
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
+
+(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/" . 3))
 
 (after! org
   (setq org-todo-keywords '((sequence "WAITING" "TODO(@)" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
@@ -105,10 +107,10 @@
 
 (map! (:after evil-org
        :map evil-org-mode-map
-       :n "C-s" 'evil-save
        :n "c" 'evil-copy
        :n "r" 'evil-redo))
 (map! (:after evil-org
+       :n "C-c s" 'evil-save
        :n "Q" 'evil-window-next))
 ;;(setq display-line-numbers-type t) ;; <2022-01-17 Mon 17:06> uncommenting while debugging org capture freezing
 (setq vterm-shell "/usr/local/bin/zsh")
