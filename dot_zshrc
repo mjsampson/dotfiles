@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/msampson/.oh-my-zsh"
@@ -85,7 +85,7 @@ fi
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf colored-man-pages colorize pip python brew macos zsh-syntax-highlighting zsh-autosuggestions) 
+plugins=(git fzf colored-man-pages colorize pip python brew macos zsh-syntax-highlighting zsh-autosuggestions keychain gpg-agent)
 
 # per https://github.com/ohmyzsh/ohmyzsh/issues/6835#issuecomment-390216875
 ZSH_DISABLE_COMPFIX=true
@@ -136,3 +136,4 @@ eval "$(pyenv init -)"
 eval "$(starship init zsh)"
 
 
+export PATH="/usr/local/sbin:$PATH"

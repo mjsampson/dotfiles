@@ -35,6 +35,8 @@
       magit-inhibit-save-previous-winconf t
       transient-values '((magit-rebase "--autosquash" "--autostash")
                          (magit-pull "--rebase" "--autostash")))
+;; when using magit, it takes forever
+(setq vc-handled-backends nil)
 
 (setq org-directory "~/Dropbox/org/"
       org-index-file (concat org-directory "getting-things-done.org" ))
@@ -51,7 +53,7 @@
 ;; from here https://stackoverflow.com/a/18209748/16154075
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
 
-(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/" . 3))
+(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/"))
 
 (after! org
   (setq org-todo-keywords '((sequence "WAITING" "TODO(@)" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
@@ -78,6 +80,10 @@
        "C-c n o" #'org-id-get-create
        "C-c n t" #'org-roam-tag-add
        "C-c n a" #'org-roam-alias-add)
+
+(setq
+ python-shell-interpreter "ipython"
+ python-shell-interpreter-args "-i");
 
 ;;(set-email-account!
 ;; "gmail"

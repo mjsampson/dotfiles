@@ -44,7 +44,12 @@
       magit-inhibit-save-previous-winconf t
       transient-values '((magit-rebase "--autosquash" "--autostash")
                          (magit-pull "--rebase" "--autostash")))
+;; when using magit, it takes forever
+(setq vc-handled-backends nil)
+
 #+end_src
+
+#+RESULTS:
 
 * org
 #+begin_src elisp
@@ -64,14 +69,17 @@
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
 #+end_src
 
+#+RESULTS:
+: org-insert-link
+
 * Projectile
 
 #+begin_src elisp
-(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/" . 3))
+(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/"))
 #+end_src
 
 #+RESULTS:
-: org-insert-link
+| ~/code/ | ~/Dropbox/org/ |
 
 Conifugring tracking todo state changes following https://orgmode.org/org.html#Tracking-TODO-state-changes
 #+begin_src elisp
@@ -102,6 +110,19 @@ Conifugring tracking todo state changes following https://orgmode.org/org.html#T
        "C-c n a" #'org-roam-alias-add)
 #+end_src
 
+#+RESULTS:
+
+** Python
+Trying out emacs programming for python, following https://www.seas.upenn.edu/~chaoliu/2017/09/01/python-programming-in-emacs/
+#+begin_src elisp
+(setq
+ python-shell-interpreter "ipython"
+ python-shell-interpreter-args "-i");
+
+#+end_src
+
+#+RESULTS:
+: -i
 
 * Gmail (commented out for now since I don't have time to setup my workflow)
 #+begin_src elisp
