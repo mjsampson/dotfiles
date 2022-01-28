@@ -58,7 +58,7 @@
        ;;(format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
-       ;;multiple-cursors  ; editing in many places at once
+       multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
@@ -154,14 +154,17 @@
        (org               ; organize your plain life in plain text
         +roam2
         +pretty
-        +dragndrop
-        +present
         +noter
+        +jupyter
         )
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        purescript        ; javascript, but functional
-       python            ; beautiful is better than ugly
+       (python      ;; beautiful is better than ugly
+        +lsp
+        +pyright
+        +pyenv
+        +poetry)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6

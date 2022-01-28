@@ -85,31 +85,35 @@
  python-shell-interpreter "ipython"
  python-shell-interpreter-args "-i");
 
-;;(set-email-account!
-;; "gmail"
-;; '((mu4e-sent-folder       . "/[Gmail]/Sent Mail")
-;;   (mu4e-trash-folder      . "/[Gmail]/Bin")
-;;   (smtpmail-smtp-user     . "example@gmail.com"))
-;; t)
-;;(setq org-refile-targets '((org-index-file :maxlevel . 3)))
-;;(after! mu4e (setq mu4e-get-mail-command "mbsync gmail"
+(setq org-refile-targets '((org-index-file :maxlevel . 3)))
+
+(set-email-account!
+ "matthew@graywolfai.com"
+ '((mu4e-sent-folder       . "/[Gmail]/Sent Mail")
+   (mu4e-trash-folder      . "/[Gmail]/Bin")
+   (smtpmail-smtp-user     . "matthew@graywolfai.com"))
+ t)
+(after! mu4e (setq mu4e-get-mail-command "mbsync gmail"
       ;; get emails and index every 5 minutes
-;;      mu4e-update-interval 300
+      mu4e-update-interval 300
 	  ;; send emails with format=flowed
-;;	  mu4e-compose-format-flowed t
+	  mu4e-compose-format-flowed t
 	  ;; don't need to run cleanup after indexing for gmail
-;;	  mu4e-index-cleanup nil
-;;	  mu4e-index-lazy-check t
+	  mu4e-index-cleanup nil
+	  mu4e-index-lazy-check t
       ;; more sensible date format
-;;      mu4e-headers-date-format "%d.%m.%y"))
+      mu4e-headers-date-format "%d.%m.%y"))
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-;;(setq message-send-mail-function 'smtpmail-send-it
-;;     smtpmail-stream-type 'starttls
-;;     smtpmail-default-smtp-server "smtp.gmail.com"
-;;     smtpmail-smtp-server "smtp.gmail.com"
-;;     smtpmail-smtp-service 587)
-;;(setq auth-sources (quote (macos-keychain-internet macos-keychain-generic)))
+(setq message-send-mail-function 'smtpmail-send-it
+     smtpmail-stream-type 'starttls
+     smtpmail-default-smtp-server "smtp.gmail.com"
+     smtpmail-smtp-server "smtp.gmail.com"
+     smtpmail-smtp-service 587)
+(after! auth-source (setq auth-sources (nreverse auth-sources))) ;; from[[https://www.erichgrunewald.com/posts/setting-up-gmail-in-doom-emacs-using-mbsync-and-mu4e/][this article]]
+(require 'epg)
+(setq epa-pinetry-mode 'loopback)
+(print "not for your eyes")
 
 (map! (:after evil-org
        :map evil-org-mode-map
@@ -120,6 +124,7 @@
        :n "Q" 'evil-window-next))
 ;;(setq display-line-numbers-type t) ;; <2022-01-17 Mon 17:06> uncommenting while debugging org capture freezing
 (setq vterm-shell "/usr/local/bin/zsh")
+;;(evil-multiedit-default-keybinds) ;; I think this needs to run in an after block? It's error out
 
 ;; turns on indent more
 (add-hook 'org-mode-hook 'org-indent-mode)
@@ -244,8 +249,6 @@
 
 ;;(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
 
-
-
 (after! org-roam
     (org-roam-setup))
 (defun my-citar-org-format-note-function (key entry filepath)
@@ -272,3 +275,5 @@
         (when (fboundp 'evil-insert)
           (evil-insert 1)))))
 (setq citar-format-note-function #'my-citar-org-format-note-function)
+
+
