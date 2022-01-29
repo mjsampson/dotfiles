@@ -1,4 +1,18 @@
+* Emacs Literate Config Matthew Sampson :TOC:
+  - [[#user-level-stuff][User Level Stuff]]
+  - [[#magit][Magit]]
+  - [[#org][Org]]
+  - [[#projectile][Projectile]]
+  - [[#python][Python]]
+  - [[#gmail-commented-out-for-now-since-i-dont-have-time-to-setup-my-workflow][Gmail (commented out for now since I don't have time to setup my workflow)]]
+  - [[#setting-up-terminal][Setting up terminal]]
+  - [[#org-mode][Org-Mode]]
+  - [[#org-roam-dailies-copy-done-tasks-to-today-this-code-needs-to-be-debugged][Org-roam dailies copy done tasks to today (this code needs to be debugged)]]
+  - [[#org-capture-templates][Org-Capture templates]]
+  - [[#note-taking-workflow][Note taking workflow]]
+  - [[#citar--org-roam][Citar + Org-Roam]]
 
+** User Level Stuff
 #+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
@@ -35,7 +49,7 @@
 | doom-dashboard-widget-banner | doom-dashboard-widget-loaded | doom-dashboard-widget-footer |
 
 
-* Magit
+** Magit
 #+begin_src elisp
 ;;; :tools magit
 (setq magit-repository-directories '(("~/Projects" . 2))
@@ -51,7 +65,7 @@
 
 #+RESULTS:
 
-* org
+** Org
 #+begin_src elisp
 (setq org-directory "~/Dropbox/org/"
       org-index-file (concat org-directory "getting-things-done.org" ))
@@ -72,7 +86,7 @@
 #+RESULTS:
 : org-insert-link
 
-* Projectile
+** Projectile
 
 #+begin_src elisp
 (setq projectile-project-search-path '("~/code/" "~/Dropbox/org/"))
@@ -124,7 +138,7 @@ Trying out emacs programming for python, following https://www.seas.upenn.edu/~c
 #+RESULTS:
 : -i
 
-* Gmail (commented out for now since I don't have time to setup my workflow)
+** Gmail (commented out for now since I don't have time to setup my workflow)
 #+begin_src elisp
 (setq org-refile-targets '((org-index-file :maxlevel . 3)))
 
@@ -161,7 +175,7 @@ Trying out emacs programming for python, following https://www.seas.upenn.edu/~c
 : not for your eyes
 
 
-* Setting up terminal
+** Setting up terminal
 #+begin_src elisp
 (map! (:after evil-org
        :map evil-org-mode-map
@@ -180,7 +194,7 @@ Trying out emacs programming for python, following https://www.seas.upenn.edu/~c
 : /usr/local/bin/zsh
 
 
-* Org-Mode
+** Org-Mode
 
 #+begin_src elisp
 ;; turns on indent more
@@ -231,10 +245,17 @@ Trying out emacs programming for python, following https://www.seas.upenn.edu/~c
       '(("d" "default" entry "* %<%I:%M %p>: %?"
          :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
 )
+
+(if (require 'toc-org nil t)
+    (progn
+      (add-hook 'org-mode-hook 'toc-org-mode)
+      ;;enable in markdown, too
+      (add-hook 'markdown-mode-hook 'toc-org-mode))
+  (warn "toc-org note found"))
 #+end_src
 
 #+RESULTS:
-| d | default | entry | * %<%I:%M %p>: %? | :if-new | (file+head %<%Y-%m-%d>.org #+title: %<%Y-%m-%d> |
+| toc-org-mode | evil-markdown-mode | doom--enable-+javascript-npm-mode-in-markdown-mode-h |
 
 ** Org-roam dailies copy done tasks to today (this code needs to be debugged)
 #+begin_src elisp
@@ -320,7 +341,7 @@ Following [cite:@bieberAgendaLifeOrg2016] to setup my agenda workflow, right now
 
 #+end_src
 
-* Note taking workflow
+** Note taking workflow
 Following https://rgoswami.me/posts/org-note-workflow/
 
 #+begin_src elisp
@@ -345,7 +366,7 @@ Following https://rgoswami.me/posts/org-note-workflow/
  ~/Dropbox/org/zotLib.bib  ~/Dropbox/org/gw-zotLib.bib 
 
 
-* Citar + Org-Roam
+** Citar + Org-Roam
 Following  [[https://github.com/bdarcus/citar/blob/37493749bcad63613f01ecad63b2f5628f6f13f8/citar-org.el#L279][citar format note function]] from the citar repo as a guide. I had to edit the format note function to include the ID property for org-roam. A similar thing could be achieved with `org-ref` + `org-ref-bibtex (ORB)` but I wanted to use the newer org-cite with vertico, so I went with citar instead that had its own note templating function that worked with org-roamv2. I've read a bit about how org-roamv2 supports the org-cite format and I'm interpreting from citar's readme (as of <2022-01-18 Tue 07:41>) that the default note formatting function should just work with org-roam v2 through the connection of org-cite, but I wasn't able to see it working without editing it like below. I also don't know if the citation key is the best thing for the org-id. I mainly ue Zotero for bibtex management so Zotero would generate the citations keys from what I understand, assuming they're unique it should be fine. A better solution would probably include hash the citation-key + timestamp, since it's more about uniqueness than determinism I believe
 
 #+begin_src emacs-lisp

@@ -175,6 +175,13 @@
          :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
 )
 
+(if (require 'toc-org nil t)
+    (progn
+      (add-hook 'org-mode-hook 'toc-org-mode)
+      ;;enable in markdown, too
+      (add-hook 'markdown-mode-hook 'toc-org-mode))
+  (warn "toc-org note found"))
+
 (defun my/org-roam-copy-todo-to-today ()
   (interactive)
   (let ((org-refile-keep t) ;; Set this to nil to delete the original!
