@@ -38,7 +38,7 @@
 ;; when using magit, it takes forever
 (setq vc-handled-backends nil)
 
-(setq org-directory "~/Dropbox/org/"
+(setq org-directory "/Volumes/org/"
       org-index-file (concat org-directory "getting-things-done.org" ))
 
 
@@ -53,7 +53,7 @@
 ;; from here https://stackoverflow.com/a/18209748/16154075
 (global-set-key (kbd "C-c C-l") 'org-insert-link)
 
-(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/"))
+(setq projectile-project-search-path '("~/code/" org-directory))
 
 (after! org
   (setq org-todo-keywords '((sequence "WAITING" "TODO(@)" "NEXT" "FIGURING-IT-OUT" "MAKING-IT-HAPPEN" "|" "DONE" "CANCELLED")))
@@ -240,17 +240,16 @@
   :custom
     (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
 
-(setq org_notes "~/Dropbox/org/notes/")
+(setq org_notes (concat org-directory "notes/"))
 ;;(setq zot_bib) ;; not sure if I need this, I think its just a private variables
-(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
+(setq bibtex-completion-bibliography (list (concat org-directory "zotLib.bib") (concat org-directory "gw-zotLib.bib")))
 (after! citar
-  (setq org-cite-global-bibliography
-        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+  (setq org-cite-global-bibliography bibtex-completion-bibliography)
 (setq org-cite-insert-processor 'citar)
 (setq org-cite-follow-processor 'citar)
 (setq org-cite-activate-processor 'citar)
 (setq citar-bibliography org-cite-global-bibliography)
-(setq citar-notes-paths `("~/Dropbox/Org/roam"))
+(setq citar-notes-paths (list (concat org-directory "roam/")))
 )
 ;;(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display commenting this out because it's raising errors when I open org files
 

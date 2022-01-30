@@ -67,7 +67,7 @@
 
 ** Org
 #+begin_src elisp
-(setq org-directory "~/Dropbox/org/"
+(setq org-directory "/Volumes/org/"
       org-index-file (concat org-directory "getting-things-done.org" ))
 
 
@@ -89,11 +89,11 @@
 ** Projectile
 
 #+begin_src elisp
-(setq projectile-project-search-path '("~/code/" "~/Dropbox/org/"))
+(setq projectile-project-search-path '("~/code/" org-directory))
 #+end_src
 
 #+RESULTS:
-| ~/code/ | ~/Dropbox/org/ |
+| ~/code/ | org-directory |
 
 Conifugring tracking todo state changes following https://orgmode.org/org.html#Tracking-TODO-state-changes
 #+begin_src elisp
@@ -345,17 +345,16 @@ Following [cite:@bieberAgendaLifeOrg2016] to setup my agenda workflow, right now
 Following https://rgoswami.me/posts/org-note-workflow/
 
 #+begin_src elisp
-(setq org_notes "~/Dropbox/org/notes/")
+(setq org_notes (concat org-directory "notes/"))
 ;;(setq zot_bib) ;; not sure if I need this, I think its just a private variables
-(setq bibtex-completion-bibliography "~/Dropbox/org/zotLib.bib")
+(setq bibtex-completion-bibliography (list (concat org-directory "zotLib.bib") (concat org-directory "gw-zotLib.bib")))
 (after! citar
-  (setq org-cite-global-bibliography
-        '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+  (setq org-cite-global-bibliography bibtex-completion-bibliography)
 (setq org-cite-insert-processor 'citar)
 (setq org-cite-follow-processor 'citar)
 (setq org-cite-activate-processor 'citar)
 (setq citar-bibliography org-cite-global-bibliography)
-(setq citar-notes-paths `("~/Dropbox/Org/roam"))
+(setq citar-notes-paths (list (concat org-directory "roam/")))
 )
 ;;(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display commenting this out because it's raising errors when I open org files
 
@@ -363,7 +362,8 @@ Following https://rgoswami.me/posts/org-note-workflow/
 #+end_src
 
 #+RESULTS:
- ~/Dropbox/org/zotLib.bib  ~/Dropbox/org/gw-zotLib.bib 
+| /Volumes/org/roam/ |
+ ~/Dropbox/org/zotLib.bib  ~/Dropbox/org/gw-zotLib.bib
 
 
 ** Citar + Org-Roam
