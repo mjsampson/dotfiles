@@ -18,13 +18,30 @@ if type bat > /dev/null 2>&1; then
   alias cat='bat --paging=never'
 fi
 
-if type lazygit > /dev/null 2>&1; then
-  alias lg='lazygit'
-fi
-
 if type python3 > /dev/null 2>&1; then
   alias python=python3
 fi
+
+# Nix
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nix
+
+
+
+# Nix
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nix
+
+# Nix
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nix
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -133,7 +150,8 @@ source /Users/msampson/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 echo 'eval "$(pyenv init --path)"' >> ~/.zprofile
 
 eval "$(pyenv init -)"
-eval "$(starship init zsh)"
 
 
 export PATH="/usr/local/sbin:$PATH"
+
+export PATH="$HOME/.poetry/bin:$PATH"
