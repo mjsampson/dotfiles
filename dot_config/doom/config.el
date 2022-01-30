@@ -241,8 +241,9 @@
     (yequake-frames '(("org-capture" (buffer-fns . (yequake-org-capture)) (width . 0.75) (height . 0.75)(alpha . 0.95)(frame-parameters . ((undecorated . t) (skip-taskbar . t)(sticky . t)))))))
 
 (setq org_notes (concat org-directory "notes/"))
+(setq bibliography-directory "~/bibliography/" )
 ;;(setq zot_bib) ;; not sure if I need this, I think its just a private variables
-(setq bibtex-completion-bibliography (list (concat org-directory "zotLib.bib") (concat org-directory "gw-zotLib.bib")))
+(setq bibtex-completion-bibliography (list (concat bibliography-directory "zotLib.bib") (concat bibliography-directory "gw-zotLib.bib")))
 (after! citar
   (setq org-cite-global-bibliography bibtex-completion-bibliography)
 (setq org-cite-insert-processor 'citar)
@@ -254,6 +255,15 @@
 ;;(citar-filenotify-setup '(LaTeX-mode-hook org-mode-hook)) ;; following https://github.com/bdarcus/citar#refreshing-the-library-display commenting this out because it's raising errors when I open org files
 
 ;;(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
+
+(defun my/current-time-string ()
+  "calls current-time, then loops through each integer value and converts to string"
+  (cl-loop for val in (current-time)
+         concat (int-to-string val)))
+(defun my/citar-notes-gen-roam-id (key)
+  "generate a unique hash id by concating the input 'key' with the string version of current-time"
+  (secure-hash 'md5 (concat key (my/current-time-string)))
+  )
 
 (after! org-roam
     (org-roam-setup))
@@ -271,7 +281,7 @@
         (erase-buffer)
         (citar-org-roam-make-preamble key)
         (insert ":PROPERTIES:\n:ID:     ")
-        (insert key)
+        (insert (my/citar-notes-gen-roam-id key))
         (insert"\n:END:\n")
         (insert "#+title: ")
         (when template (insert note-meta))
@@ -280,6 +290,6 @@
         (delete-char 1)
         (when (fboundp 'evil-insert)
           (evil-insert 1)))))
-(setq citar-format-note-function #'my-citar-org-format-note-function)
+;;(setq citar-format-note-function #'my-citar-org-format-note-function)
 
 

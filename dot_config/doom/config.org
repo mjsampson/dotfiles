@@ -343,11 +343,12 @@ Following [cite:@bieberAgendaLifeOrg2016] to setup my agenda workflow, right now
 
 ** Note taking workflow
 Following https://rgoswami.me/posts/org-note-workflow/
-
+<2022-01-30 Sun 18:03> currently I'm running my org files in cryptomator, and zotero is struggling to background export bibliography updates to the virtual drive. I'll need to figure out a solution to this (a quick one would just be to have my bilbiography exports on my standard file system, so I'm gonna do that for now.. but eventually I want something more integreated with my plain text that maintains the secure encryption on the cloud)
 #+begin_src elisp
 (setq org_notes (concat org-directory "notes/"))
+(setq bibliography-directory "~/bibliography/" )
 ;;(setq zot_bib) ;; not sure if I need this, I think its just a private variables
-(setq bibtex-completion-bibliography (list (concat org-directory "zotLib.bib") (concat org-directory "gw-zotLib.bib")))
+(setq bibtex-completion-bibliography (list (concat bibliography-directory "zotLib.bib") (concat bibliography-directory "gw-zotLib.bib")))
 (after! citar
   (setq org-cite-global-bibliography bibtex-completion-bibliography)
 (setq org-cite-insert-processor 'citar)
@@ -370,6 +371,15 @@ Following https://rgoswami.me/posts/org-note-workflow/
 Following  [[https://github.com/bdarcus/citar/blob/37493749bcad63613f01ecad63b2f5628f6f13f8/citar-org.el#L279][citar format note function]] from the citar repo as a guide. I had to edit the format note function to include the ID property for org-roam. A similar thing could be achieved with `org-ref` + `org-ref-bibtex (ORB)` but I wanted to use the newer org-cite with vertico, so I went with citar instead that had its own note templating function that worked with org-roamv2. I've read a bit about how org-roamv2 supports the org-cite format and I'm interpreting from citar's readme (as of <2022-01-18 Tue 07:41>) that the default note formatting function should just work with org-roam v2 through the connection of org-cite, but I wasn't able to see it working without editing it like below. I also don't know if the citation key is the best thing for the org-id. I mainly ue Zotero for bibtex management so Zotero would generate the citations keys from what I understand, assuming they're unique it should be fine. A better solution would probably include hash the citation-key + timestamp, since it's more about uniqueness than determinism I believe
 
 #+begin_src emacs-lisp
+(defun my/current-time-string ()
+  "calls current-time, then loops through each integer value and converts to string"
+  (cl-loop for val in (current-time)
+         concat (int-to-string val)))
+(defun my/citar-notes-gen-roam-id (key)
+  "generate a unique hash id by concating the input 'key' with the string version of current-time"
+  (secure-hash 'md5 (concat key (my/current-time-string)))
+  )
+
 (after! org-roam
     (org-roam-setup))
 (defun my-citar-org-format-note-function (key entry filepath)
@@ -386,7 +396,7 @@ Following  [[https://github.com/bdarcus/citar/blob/37493749bcad63613f01ecad63b2f
         (erase-buffer)
         (citar-org-roam-make-preamble key)
         (insert ":PROPERTIES:\n:ID:     ")
-        (insert key)
+        (insert (my/citar-notes-gen-roam-id key))
         (insert"\n:END:\n")
         (insert "#+title: ")
         (when template (insert note-meta))
@@ -395,7 +405,7 @@ Following  [[https://github.com/bdarcus/citar/blob/37493749bcad63613f01ecad63b2f
         (delete-char 1)
         (when (fboundp 'evil-insert)
           (evil-insert 1)))))
-(setq citar-format-note-function #'my-citar-org-format-note-function)
+;;(setq citar-format-note-function #'my-citar-org-format-note-function)
 #+end_src
 
 #+RESULTS:
