@@ -256,6 +256,8 @@
 
 ;;(setq citar-bibliography '("~/Dropbox/org/zotLib.bib" "~/Dropbox/org/gw-zotLib.bib"))
 
+
+
 (defun my/current-time-string ()
   "calls current-time, then loops through each integer value and converts to string"
   (cl-loop for val in (current-time)
@@ -291,5 +293,3 @@
         (when (fboundp 'evil-insert)
           (evil-insert 1)))))
 ;;(setq citar-format-note-function #'my-citar-org-format-note-function)
-
-
