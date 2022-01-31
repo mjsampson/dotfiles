@@ -53,7 +53,7 @@
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
-       file-templates    ; auto-snippets for empty files
+       ;;file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        ;;(format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
@@ -122,7 +122,7 @@
        data              ; config/data formats
        (dart +flutter)   ; paint ui and not much else
        ;;dhall
-       (elixir            ; erlang done right
+       ;;(elixir +lsp)           ; erlang done right
        ;;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        erlang            ; an elegant language for a more civilized age
@@ -149,7 +149,6 @@
        (markdown +grip)          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!
-       ;;
        (ocaml +lsp)            ; an objective camel
        (org               ; organize your plain life in plain text
         +roam2
@@ -199,5 +198,5 @@
 
        :config
        literate
-       (default +bindings +smartparens))
-)
+       (default +bindings +smartparens)
+ )

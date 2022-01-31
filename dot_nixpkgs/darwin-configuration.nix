@@ -6,6 +6,7 @@
   environment.systemPackages =
     [ pkgs.vim
       pkgs.notmuch
+      pkgs.afew
     ];
 
   # Use a custom configuration.nix location.
