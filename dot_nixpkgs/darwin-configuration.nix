@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 
+
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -7,8 +8,28 @@
     [ pkgs.vim
       pkgs.notmuch
       pkgs.afew
+      pkgs.gmailieer
+      pkgs.ripgrep
+      pkgs.rustup
+      pkgs.direnv
+      pkgs.gcc
+      pkgs.quartz-wm
+      pkgs.emacs27Packages.org-noter-pdftools
+      pkgs.poppler
+      pkgs.zlib
+     # rnix-lsp-0.3.0-dev
+    ];
+  imports =
+    [
+      <home-manager/nix-darwin>
+   #   ./my-autorandr.nix
     ];
 
+  services.lorri.enable = true;
+  #imports =
+  #  [
+  #    ./my-autorandr.nix
+  #  ];
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
